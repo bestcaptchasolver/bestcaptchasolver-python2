@@ -1,7 +1,7 @@
 BestCaptchaSolver.com python2 API wrapper
 =========================================
 
-bestcaptchasolverapi2 is a super easy to use bypass captcha python2 API wrapper for bestcaptchasolver.com captcha service
+bestcaptchasolver-python2 is a super easy to use bypass captcha python2 API wrapper for bestcaptchasolver.com captcha service
 
 ## Installation    
     git clone https://github.com/bestcaptchasolver/bestcaptchasolver-python2
