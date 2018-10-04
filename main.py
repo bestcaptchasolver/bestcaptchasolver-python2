@@ -23,7 +23,7 @@ def test_api():
     image_text = None
     # None is returned if completion is still in pending
     while image_text == None:
-        image_text = bcs.retrieve(id)         # get the image text using the ID
+        image_text = bcs.retrieve(id)['text']         # get the image text using the ID
         sleep(2)
 
     print ('Captcha text: {}'.format(image_text))
@@ -36,10 +36,12 @@ def test_api():
     print ('Waiting for recaptcha to be solved ...')
     gresponse = None
     while gresponse == None:    # while it's still in progress
-        gresponse = bcs.retrieve(captcha_id)
+        resp = bcs.retrieve(captcha_id)
+        gresponse = resp['gresponse']
         sleep(10)               # sleep for 10 seconds and recheck
 
     print ('Recaptcha response: {}'.format(gresponse))         # print google response
+    #proxy_status = resp['proxy_status']                       # get status of proxy
 
     # bcs.submit_image_captcha('captcha.jpg', True)    # case sensitive captcha image solving
     # bcs.submit_recaptcha(PAGE_URL, SITE_KEY, '123.45.67.89:3012')   # solve through proxy
