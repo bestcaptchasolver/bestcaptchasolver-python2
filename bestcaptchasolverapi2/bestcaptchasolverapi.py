@@ -37,8 +37,17 @@ class BestCaptchaSolverAPI:
         return '${}'.format(resp['balance'])
 
     # solve normal captcha
-    def submit_image_captcha(self, image_path, case_sensitive = False):
-        data = dict(self._data)
+    def submit_image_captcha(self, opts):
+        data = {}
+        data.update(self._data)
+
+        image_path = opts['image']
+        # case sensitive
+        if opts.has_key('case_sensitive'):
+            if opts['case_sensitive']: data['case_sensitive'] = '1'
+        # affiliate
+        if opts.has_key('affiliate_id'):
+            if opts['affiliate_id']: data['affiliate_id'] = opts['affiliate_id']
         url = '{}/captcha/image'.format(BASE_URL)
         if os.path.exists(image_path):
             with open(image_path, 'r') as f:
@@ -46,24 +55,13 @@ class BestCaptchaSolverAPI:
         else:
             data['b64image'] = image_path       # should be b64 already
 
-        if case_sensitive: data['case_sensitive'] = '1'
-
         resp = self.POST(url, data)
         return resp['id']       # return ID
 
     # submit recaptcha to system
-    def submit_recaptcha(self, page_url, site_key, proxy = None):
-        # data parameters
-        data = dict(self._data)
-        data['page_url'] = page_url
-        data['site_key'] = site_key
-
-        # check proxy and set dict (request params) accordingly
-        if proxy:   # if proxy is given, check proxytype
-            # we have both proxy and type at this point
-            data['proxy'] = proxy
-            data['proxytype'] = 'HTTP'
-
+    def submit_recaptcha(self, data):
+        data.update(self._data)
+        if data.has_key('proxy'): data['proxy_type'] = 'HTTP' # add proxy, if necessary
         # make request with all data
         url = '{}/captcha/recaptcha'.format(BASE_URL)
         resp = self.POST(url, data)
