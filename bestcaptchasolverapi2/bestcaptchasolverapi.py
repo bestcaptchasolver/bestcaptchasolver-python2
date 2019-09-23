@@ -9,7 +9,7 @@ from base64 import b64encode
 
 USER_AGENT = 'python2Client'
 BASE_URL = 'https://bcsapi.xyz/api'
-SSL_VERIFY = False
+SSL_VERIFY = True
 # endpoints
 # -------------------------------------------------------------------------------------------
 
@@ -42,9 +42,20 @@ class BestCaptchaSolverAPI:
         data.update(self._data)
 
         image_path = opts['image']
-        # case sensitive
+        # optional parameters
         if opts.has_key('case_sensitive'):
-            if opts['case_sensitive']: data['case_sensitive'] = '1'
+            print ('case_sensitive is deprecated, use is_case instead')
+            if opts['case_sensitive']: data['is_case'] = True
+        if opts.has_key('is_case'):
+            if opts['is_case']: data['is_case'] = True
+        if opts.has_key('is_phrase'):
+            if opts['is_phrase']: data['is_phrase'] = True
+        if opts.has_key('is_math'):
+            if opts['is_math']: data['is_math'] = True
+        if opts.has_key('alphanumeric'): data['alphanumeric'] = opts['alphanumeric']
+        if opts.has_key('minlength'): data['minlength'] = opts['minlength']
+        if opts.has_key('maxlength'): data['maxlength'] = opts['maxlength']
+
         # affiliate
         if opts.has_key('affiliate_id'):
             if opts['affiliate_id']: data['affiliate_id'] = opts['affiliate_id']
@@ -67,12 +78,30 @@ class BestCaptchaSolverAPI:
         resp = self.POST(url, data)
         return resp['id']  # return ID
 
+    # submit recaptcha to system
+    def submit_geetest(self, data):
+        data.update(self._data)
+        if data.has_key('proxy'): data['proxy_type'] = 'HTTP' # add proxy, if necessary
+        # make request with all data
+        url = '{}/captcha/geetest'.format(BASE_URL)
+        resp = self.POST(url, data)
+        return resp['id']  # return ID
+
+    # submit recaptcha to system
+    def submit_capy(self, data):
+        data.update(self._data)
+        if data.has_key('proxy'): data['proxy_type'] = 'HTTP' # add proxy, if necessary
+        # make request with all data
+        url = '{}/captcha/capy'.format(BASE_URL)
+        resp = self.POST(url, data)
+        return resp['id']  # return ID
+
     # retrieve captcha
     def retrieve(self, captcha_id = None):
         url = '{}/captcha/{}?access_token={}'.format(BASE_URL, captcha_id, self._access_token)
         resp = self.GET(url)
         try:
-            if resp['status'] == 'pending': return {'text': None, 'gresponse': None}
+            if resp['status'] == 'pending': return {'text': None, 'gresponse': None, 'solution': None}
         except:
             pass
 

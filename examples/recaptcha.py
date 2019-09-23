@@ -3,11 +3,11 @@
 from bestcaptchasolverapi2 import BestCaptchaSolverAPI
 from time import sleep
 
-ACCESS_TOKEN = 'your_access_token'
-PAGE_URL = 'page_url_here'
-SITE_KEY = 'sitekey_here'
+ACCESS_TOKEN = 'ACCESS_TOKEN_HERE'
+PAGE_URL = 'PAGE_URL_HERE'
+SITE_KEY = 'SITE_KEY_HERE'
 
-# solve captcha
+# for more details check https://bestcaptchasolver.com/captchabypass-api
 def test_api():
     bcs = BestCaptchaSolverAPI(ACCESS_TOKEN)        # get access token from: https://bestcaptchasolver.com/account
 
@@ -15,22 +15,6 @@ def test_api():
     # ---------------------------
     balance = bcs.account_balance()                       # get account balance
     print ('Balance: {}'.format(balance))                 # print balance
-
-    # solve image captcha
-    # --------------------
-    print ('Solving image captcha ...')
-    data = {}
-    data['image'] = 'captcha.jpg'
-    #data['case_sensitive'] = True #, default: False
-    #data['affiliate_id'] = 'affiliate_id from /account'
-    id = bcs.submit_image_captcha(data)  # submit image captcha (case_sensitive param optional)
-    image_text = None
-    # None is returned if completion is still in pending
-    while image_text == None:
-        image_text = bcs.retrieve(id)['text']  # get the image text using the ID
-        sleep(5)
-
-    print ('Captcha text: {}'.format(image_text))
 
     # solve recaptcha
     # ---------------
@@ -59,7 +43,8 @@ def test_api():
         sleep(10)               # sleep for 10 seconds and recheck
 
     print ('Recaptcha response: {}'.format(gresponse))         # print google response
-    #proxy_status = resp['proxy_status']                       # get status of proxy
+
+    # proxy_status = resp['proxy_status']                      # get status of proxy
     # bcs.set_captcha_bad(2)    # set captcha with ID 2, bad
 
 # main method
