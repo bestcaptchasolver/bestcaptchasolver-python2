@@ -87,12 +87,21 @@ class BestCaptchaSolverAPI:
         resp = self.POST(url, data)
         return resp['id']  # return ID
 
-    # submit recaptcha to system
+    # submit capy to system
     def submit_capy(self, data):
         data.update(self._data)
         if data.has_key('proxy'): data['proxy_type'] = 'HTTP' # add proxy, if necessary
         # make request with all data
         url = '{}/captcha/capy'.format(BASE_URL)
+        resp = self.POST(url, data)
+        return resp['id']  # return ID
+
+    # submit hcaptcha to system
+    def submit_hcaptcha(self, data):
+        data.update(self._data)
+        if data.has_key('proxy'): data['proxy_type'] = 'HTTP'  # add proxy, if necessary
+        # make request with all data
+        url = '{}/captcha/hcaptcha'.format(BASE_URL)
         resp = self.POST(url, data)
         return resp['id']  # return ID
 
